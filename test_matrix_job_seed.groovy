@@ -17,10 +17,11 @@ matrixJob('SarahTestjobMatrix') {
         for (proj_name in proj_names) {
             int i = proj_name.lastIndexOf('/');
             String proj_target = proj_name.substring(i+1);
-            step ([$class: 'CopyArtifact',
-                projectName: '$proj_name',
-                filter: "*.xml,**/.test",
-                target: '$proj_target']);
+
+            copyArtifacts('$proj_name') {
+                includePatterns('*.xml', '**/*.properties')
+                targetDirectory('$proj_target')
+            }
         }
     }
 }
