@@ -13,19 +13,12 @@ matrixJob('SarahTestjobMatrix') {
     triggers {
         upstream(proj_names.join(','), 'SUCCESS')
     }
-    stages {
-        stage('Copy Archive') {
-            for (proj_name in proj_names) {
-                int i = proj_name.lastIndexOf('/');
-                String proj_target = proj_name.substring(i+1);
-                steps {
-                    script {
-                        step ([$class: 'CopyArtifact',
-                            projectName: '$proj_name',
-                            filter: "*.xml,**/.test",
-                            target: '$proj_target']);
-                    }
-                }
+    steps {
+        for (proj_name in proj_names) {
+            int i = proj_name.lastIndexOf('/');
+            String proj_target = proj_name.substring(i+1);
+            step('Copy artifact') {
+                copyArtifacts filter: "*.xml,**/.test", projectName: '$proj_name'}, target: '$proj_target'
             }
         }
     }
