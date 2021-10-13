@@ -17,7 +17,10 @@ matrixJob('SarahTestjobMatrix') {
         for (proj_name in proj_names) {
             int i = proj_name.lastIndexOf('/');
             String proj_target = proj_name.substring(i+1);
-            copyArtifacts filter: "*.xml,**/.test", projectName: '$proj_name', target: '$proj_target'
+            step ([$class: 'CopyArtifact',
+                projectName: '$proj_name',
+                filter: "*.xml,**/.test",
+                target: '$proj_target']);
         }
     }
 }
